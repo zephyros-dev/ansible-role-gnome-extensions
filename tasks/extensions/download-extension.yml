@@ -1,0 +1,23 @@
+---
+# Tasks file for ansible-role-gnome-config: Download Extension
+
+- name: Download zipped extension.
+  ansible.builtin.get_url:
+    url: "{{ gnome_extensions_url }}{{ register__gnome_extension_data.json.download_url }}"
+    dest: "{{ register__gnome_extension_temp.path }}/{{ gnome_extension_uuid }}.zip"
+
+- name: Ensure extension directory exists.
+  ansible.builtin.file:
+    path: "{{ gnome_extensions_dir }}/{{ gnome_extension_uuid }}"
+    state: directory
+    recurse: true
+    owner: "{{ gnome_user }}"
+    group: "{{ gnome_user }}"
+
+- name: Extract extension to its directory.
+  ansible.builtin.unarchive:
+    src: "{{ register__gnome_extension_temp.path }}/{{ gnome_extension_uuid }}.zip"
+    dest: "{{ gnome_extensions_dir }}/{{ gnome_extension_uuid }}"
+    remote_src: true
+    owner: "{{ gnome_user }}"
+    group: "{{ gnome_user }}"

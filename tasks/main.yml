@@ -1,2 +1,40 @@
 ---
 # tasks file for ansible-role-gnome-config
+
+- name: Install required packages.
+  ansible.builtin.package: "{{ gnome_extensions }}"
+
+- name: Get the Gnome version.
+  ansible.builtin.command: "gnome-shell --version"
+  register: register__gnome_version
+  changed_when: false
+
+- name: Set some initial facts.
+  ansible.builtin.set_fact:
+    gnome_extensions_dir: "/home/{{ gnome_user }}/.local/share/gnome-shell/extensions/"
+    gnome_version: "{{ register__gnome_version.stdout|regex_search('\\d+\\.\\d+\\.\\d+') }}"
+
+- name: Add, remove, install, and uninstall extensions.
+  block:
+    - name: Create a temporary working directory.
+      ansible.builtin.tempfile:
+        state: directory
+        suffix: "_extension"
+      register: register__gnome_extension_temp
+      changed_when: false
+      when: "gnome_extensions|length"
+
+    - name: Manage extensions.
+      ansible.builtin.include_tasks: "extensions/manage-extensions.yml"
+      loop: "{{ gnome_extensions }}"
+      loop_control:
+        loop_var: "gnome_extension"
+
+    - name: Remove temporary working directory.
+      ansible.builtin.file:
+        path: "{{ register__gnome_extension_temp.path }}"
+        state: absent
+      changed_when: false
+      when:
+        - "register__gnome_extension_temp is defined"
+        - "register__gnome_extension_temp.path is defined"

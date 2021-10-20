@@ -1,0 +1,70 @@
+---
+# Tasks file for ansible-role-gnome-config: Manage Extensions
+
+# We need to find all downloaded and installed extensions on every iteration
+# since a previous iteration could have changed what's present and what's
+# installed.
+#
+# @todo Find out where exactly gnome-extensions is available and use it here if
+#   possible (i.e. gnome-extensions list).
+- name: Find all Gnome extensions.
+  ansible.builtin.command: "find {{ gnome_extensions_dir }} -mindepth 1 -maxdepth 1 -type d -printf \"%P\n\""
+  become_user: "{{ gnome_user }}"
+  register: register__gnome_extensions
+  changed_when: false
+
+- name: Extract extension id from URL.
+  ansible.builtin.set_fact:
+    gnome_extension_id: "{{ gnome_extension.url|regex_search('\\d+') }}"
+
+- name: Retrieve extension data.
+  ansible.builtin.uri:
+    url: "{{ gnome_extensions_url }}/extension-info/?pk={{ gnome_extension_id }}&shell_version={{ gnome_version }}"
+  register: register__gnome_extension_data
+
+- name: Extract the uuid of the current extension.
+  ansible.builtin.set_fact:
+    gnome_extension_name: "{{ register__gnome_extension_data.json.name }}"
+    gnome_extension_uuid: "{{ register__gnome_extension_data.json.uuid }}"
+
+#- name: Query remote system for info on extension "\"{{ gnome_extension_name }}\""
+#  ansible.builtin.command: "gnome-extensions info {{ gnome_extension_uuid }}"
+#  become_user: "{{ gnome_user }}"
+#  register: register__gnome_extension_info
+
+- name: Download extension "\"{{ gnome_extension_name }}\"".
+  ansible.builtin.include_tasks: "extensions/download-extension.yml"
+  when:
+    # Translated: the directory is NOT present, and one or both of 'present'
+    # and 'installed' has been set for this extension.
+    - "gnome_extension_uuid not in register__gnome_extensions.stdout"
+    - "gnome_extension.state == 'present' or gnome_extension.installed == 'true'"
+
+- name: Install extension "\"{{ gnome_extension_name }}\"".
+  ansible.builtin.include_tasks: "extensions/install-extension.yml"
+  when:
+    # Translated: when the item is not in the installed list (the directory
+    # will always be present by now).
+    - "'State: DISABLED' in register__gnome_extension.info.stdout"
+    - "gnome_extension.installed == 'true'"
+  tags:
+    - molecule-notest
+
+- name: Uninstall extension "\"{{ gnome_extension_name }}\"".
+  ansible.builtin.include_tasks: "extensions/uninstall-extension.yml"
+  when:
+    # Translated: when the items is present and installed, and set to 'absent'
+    # or 'uninstalled'.
+    - "gnome_extension_uuid in register__gnome_extensions.stdout"
+    - "'State: ENABLED' in register__gnome_extension.info.stdout"
+    - "gnome_extension.state == 'absent' or gnome_extension.installed == 'false'"
+  tags:
+    - molecule-notest
+
+- name: Remove extension "\"{{ gnome_extension_name }}\"" altogether.
+  ansible.builtin.file:
+    path: "{{ gnome_extensions_dir }}/{{ gnome_extension_uuid }}"
+    state: absent
+  when:
+    - "gnome_extension_uuid in register__gnome_extensions.stdout"
+    - "gnome_extension.state == 'absent'"

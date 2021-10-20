@@ -11,6 +11,7 @@ python_version = "3.8"
 [packages]
 yamllint = "*"
 flake8 = "*"
+ansible-lint = "*"
 
 [packages.molecule]
 extras = [ "docker", "ansible",]

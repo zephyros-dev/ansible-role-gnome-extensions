@@ -1,0 +1,7 @@
+---
+# Tasks file for ansible-role-gnome-config: Remove Extensions
+
+- name: Remove extension from file system.
+  ansible.builtin.file:
+    path: "{{ gnome_extensions_dir }}/{{ gnome_extension_uuid }}"
+    state: absent

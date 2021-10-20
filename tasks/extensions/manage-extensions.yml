@@ -27,11 +27,6 @@
     gnome_extension_name: "{{ register__gnome_extension_data.json.name }}"
     gnome_extension_uuid: "{{ register__gnome_extension_data.json.uuid }}"
 
-#- name: Query remote system for info on extension "\"{{ gnome_extension_name }}\""
-#  ansible.builtin.command: "gnome-extensions info {{ gnome_extension_uuid }}"
-#  become_user: "{{ gnome_user }}"
-#  register: register__gnome_extension_info
-
 - name: Download extension "\"{{ gnome_extension_name }}\"".
   ansible.builtin.include_tasks: "extensions/download-extension.yml"
   when:
@@ -61,10 +56,8 @@
   tags:
     - molecule-notest
 
-- name: Remove extension "\"{{ gnome_extension_name }}\"" altogether.
-  ansible.builtin.file:
-    path: "{{ gnome_extensions_dir }}/{{ gnome_extension_uuid }}"
-    state: absent
+- name: Uninstall extension "\"{{ gnome_extension_name }}\"".
+  ansible.builtin.include_tasks: "extensions/remove-extension.yml"
   when:
     - "gnome_extension_uuid in register__gnome_extensions.stdout"
     - "gnome_extension.state == 'absent'"

@@ -1,2 +1,9 @@
 ---
 # defaults file for ansible-role-gnome-config
+
+# gnome_user: "example"
+
+gnome_extensions: []
+# - url: "https://extensions.gnome.org/extension/750/openweather/"
+#   state: "present"
+#   installed: true

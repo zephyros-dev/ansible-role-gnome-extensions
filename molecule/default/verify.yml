@@ -4,7 +4,59 @@
 - name: Verify
   hosts: all
   gather_facts: false
+  vars:
+    gnome_user: "instance"
+    extension_directory: "/home/instance/.local/share/gnome-shell/extensions"
+    extension_openweather_dir: "{{ extension_directory }}/openweather-extension@jenslody.de"
+    extension_gnome_screenshot_dir: "{{ extension_directory }}/gnome-shell-screenshot@ttll.de"
+  roles:
+    - ansible-role-gnome-config
   tasks:
-  - name: Example assertion
-    assert:
-      that: true
+    - name: Test extension downloads.
+      block:
+        - name: Stat the Openweather extension.js file.
+          stat:
+            path: "{{ extension_openweather_dir }}/extension.js"
+          register: register__openweather_extension_js
+
+        - name: Verify the existence of the Openweather extension.js file.
+          assert:
+            that:
+              - "register__openweather_extension_js.stat.exists|bool"
+            fail_msg: "The Openweather extension's 'extension.js' file does not exist."
+            success_msg: "The Openweather extension's 'extension.js' file exists."
+
+        - name: Verify the type of the Openweather extension.js file.
+          assert:
+            that:
+              - "register__openweather_extension_js.stat.isreg|bool"
+            fail_msg: "The 'extension.js' file is not a file."
+            success_msg: "The 'extension.js' file is a file."
+
+        - name: Verify the ownership of the Openweather extension.js file.
+          assert:
+            that:
+              - "register__openweather_extension_js.stat.pw_name == gnome_user"
+            fail_msg: "The 'extension.js' file is not owned by '{{ gnome_user }}' (found '{{ register__openweather_extension_js.stat.pw_name }}')."
+            success_msg: "The 'extension.js' file is owned by '{{ gnome_user }}'."
+
+        - name: Verify the group of the Openweather extension.js file.
+          assert:
+            that:
+              - "register__openweather_extension_js.stat.gr_name == gnome_user"
+            fail_msg: "The 'extension.js' file's group is not '{{ gnome_user }}' (found '{{ register__openweather_extension_js.stat.pw_name }}')."
+            success_msg: "The 'extension.js' file is belongs to the '{{ gnome_user }}' group."
+
+    - name: Test extension removals.
+      block:
+        - name: Stat the Gnome Shell Screenshot extension.
+          stat:
+            path: "{{ extension_gnome_screenshot_dir }}"
+          register: register__gnome_screenshot_dir
+
+        - name: Verify that the Gnome Shell Screenshot extension does not exist.
+          assert:
+            that:
+              - "not register__gnome_screenshot_dir.stat.exists|bool"
+            fail_msg: "The Gnome Shell Screenshot extension still exists."
+            success_msg: "The Gnome Shell Screenshot extension was removed successfully."

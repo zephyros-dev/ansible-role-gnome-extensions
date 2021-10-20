@@ -5,9 +5,15 @@ driver:
   name: docker
 platforms:
   - name: instance
-    image: x11docker/gnome:latest
+    # image: x11docker/gnome:latest
+    image: geerlingguy/docker-ubuntu2004-ansible:latest
     pre_build_image: true
 provisioner:
   name: ansible
+  options:
+    vvv: true
+  playbooks:
+    prepare: "prepare.yml"
+    converge: "converge.yml"
 verifier:
   name: ansible

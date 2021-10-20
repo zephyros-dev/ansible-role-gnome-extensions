@@ -1,6 +1,19 @@
 ---
 - name: Converge
   hosts: all
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+    gnome_user: "instance"
+    gnome_extensions:
+      - url: "https://extensions.gnome.org/extension/750/openweather/"
+        state: "present"
+        installed: true
+      - url: "https://extensions.gnome.org/extension/39/put-windows/"
+        state: "present"
+        installed: true
+      - url: "https://extensions.gnome.org/extension/1112/screenshot-tool/"
+        state: "absent"
+        installed: false
   tasks:
     - name: "Include ansible-role-gnome-config"
       include_role:

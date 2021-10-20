@@ -1,0 +1,62 @@
+---
+- name: Prepare
+  hosts: all
+  vars:
+    apt_packages:
+      - "ca-certificates"
+      - "gnome-shell"
+      - "gnome-shell-extensions"
+      - "unzip"
+      - "wget"
+    gnome_user: "instance"
+    gnome_extensions:
+      # url: https://extensions.gnome.org/extension/39/put-windows/
+      - uuid: "putWindow@clemens.lab21.org"
+        version_tag: "20268"
+        installed: 1
+      # url: https://extensions.gnome.org/extension/1112/screenshot-tool/
+      - uuid: "gnome-shell-screenshot@ttll.de"
+        version_tag: "15466"
+        installed: 0
+  tasks:
+    - name: Create user.
+      ansible.builtin.user:
+        name: "instance"
+
+    - name: Upgrade packages.
+      ansible.builtin.apt:
+        upgrade: true
+
+    - name: Install required host packages.
+      ansible.builtin.apt:
+        name: "{{ package }}"
+        update_cache: true
+      loop: "{{ apt_packages }}"
+      loop_control:
+        loop_var: package
+
+    - name: Update outdated root certs.
+      ansible.builtin.command: "update-ca-certificates --fresh"
+
+    - name: Download some extensions to test removal.
+      ansible.builtin.shell: |
+        set -e
+        temp_dir="/tmp/molecule-prepare"
+        download_url="https://extensions.gnome.org/download-extension/{{ extension.uuid }}.shell-extension.zip?version_tag={{ extension.version_tag }}"
+        download_path="${temp_dir}/{{ extension.uuid }}.shell-extension.zip"
+        install_path="/home/{{ gnome_user }}/.local/share/gnome-shell/extensions/{{ extension.uuid }}"
+        gnome_user="{{ gnome_user }}"
+        install_extension="{{ extension.installed }}"
+
+        if [ -d "$temp_dir" ]; then
+          rm -rf "$temp_dir"
+        fi
+        mkdir "$temp_dir"
+        mkdir -p "$install_path"
+        wget -O "${download_path}" "${download_url}"
+        unzip "${download_path}" -d "${install_path}"
+        chown -R "${gnome_user}":"${gnome_user}" "${install_path}"
+        rm -rf "$temp_dir"
+      loop: "{{ gnome_extensions }}"
+      loop_control:
+        loop_var: extension

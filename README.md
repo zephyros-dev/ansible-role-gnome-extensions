@@ -35,7 +35,7 @@ In addition, the role currently uses Debian/Ubuntu-specific tools.
 
 #### `gnome_extensions` variable
 
-Each item his variable has three required properties:
+Each item has variable has three required properties:
 
 | Property name | Required | Type | Accepted values |
 |---------------|----------|------|-----------------|

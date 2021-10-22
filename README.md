@@ -1,38 +1,96 @@
-Role Name
-=========
+# Ansible Role Gnome Config
 
-A brief description of the role goes here.
+An Ansible role for idempotently managing Gnome desktop configuration.
 
-Requirements
-------------
+For the moment, only supports downloading, enabling, disabling, and removing
+Gnome extensions that are available from https://extensions.gnome.org, as well
+as enabling and disabling Gnome extensions that have been installed via Apt.
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+Future plans include adding support for downloading via git and the management
+of other Gnome settings and configuration.
 
-Role Variables
---------------
+## Requirements
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+For obvious reasons, this role requires a host with a Gnome desktop environment.
 
-Dependencies
-------------
+In addition, the role currently uses Debian/Ubuntu-specific tools.
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+## Role Variables
 
-Example Playbook
-----------------
+### Vars
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+| Variable name | Required | Default value | Description |
+|---------------|----------|---------------|-------------|
+| `gnome_extensions_url` | yes | `https://extensions.gnome.org` | The base of the url used to download Gnome extensions. |
+| `gnome_packages` | yes | `[{name: 'gnome-shell', state: 'present'}, {'gnome-shell-extensions', 'present'}]` | The packages required on the target host for the role to function in the first place. |
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+### Defaults: extension-related
 
-License
--------
+| Variable name | Required | Default value | Description |
+|---------------|----------|---------------|-------------|
+| `gnome_extensions` | yes | `[]` | Describes the url and desired existence/enabled state for each Gnome extension (see note below for details). |
 
-BSD
+#### `gnome_extensions` variable
 
-Author Information
-------------------
+This variable has three required properties:
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+| Property name | Required | Type | Accepted values |
+|---------------|----------|------|-----------------|
+| `url`         | yes      | string  | A url suitable for [ansible.builtin.get_url](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/get_url_module.html) |
+| `state`       | yes      | string  | `present` or `absent` |
+| `enabled`     | yes      | boolean | `True`, `False`, or [anything ansible regards as 'truthy'](https://docs.ansible.com/ansible/latest/user_guide/playbooks_conditionals.html#conditionals-based-on-variables) |
+
+- url: the url of the extension on extensions.gnome.org, e.g. `https://extensions.gnome.org/extension/750/openweather`,
+- state: whether or not the extension should be present in the file system, e.g. `present` or `absent`,
+- enabled: whether or not to enable the extension, e.g. `true` or `false`
+
+## Dependencies
+
+The role has no special dependencies. 
+
+## Example Playbook
+
+The following playbook:
+
+  - downloads the [Open Weather](https://extensions.gnome.org/extension/750/openweather/) and [Put Windows](https://extensions.gnome.org/extension/750/openweather/) extensions and ensures they are
+    installed,
+  - removes the [Gnome Screenshot Tool](https://extensions.gnome.org/extension/1112/screenshot-tool/) extension after first disabling it,
+
+```yaml
+- name: Manage Gnome extensions.
+  hosts: servers
+  vars:
+    gnome_user: "instance"
+    gnome_extensions:
+    gnome_user: "instance"
+    gnome_extensions:
+      - url: "https://extensions.gnome.org/extension/750/openweather/"
+        state: "present"
+        installed: true
+      - url: "https://extensions.gnyi"ome.org/extension/39/put-windows/"
+        state: "present"
+        installed: true
+      - url: "https://extensions.gnome.org/extension/1112/screenshot-tool/"
+        state: "absent"
+        installed: false
+  tasks:
+    - name: "Include ansible-role-gnome-config"
+      include_role:
+        name: "ansible-role-gnome-config"
+```
+
+## Testing
+
+The role is fully tested in Molecule on Docker and verified with Ansible with
+two exceptions: enabling and disabling Gnome extensions.
+
+If anybody knows how to get enough of Gnome reproducibly running in Docker so
+that I can enable these two things to be tested, please let me know!
+
+## License
+
+GPL-3.0-only
+
+## Acknowledgments
+
+Big thanks to @PeterMosmans et al whose handy [Ansible Role: customize-gnome](https://github.com/PeterMosmans/ansible-role-customize-gnome) inspired this one.

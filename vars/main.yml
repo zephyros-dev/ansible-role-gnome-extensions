@@ -6,3 +6,5 @@ gnome_extensions_url: "https://extensions.gnome.org"
 gnome_packages:
   - name: "gnome-shell"
     state: present
+  - name: "gnome-shell-extensions"
+    state: present

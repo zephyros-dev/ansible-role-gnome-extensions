@@ -4,8 +4,6 @@
   vars:
     apt_packages:
       - "ca-certificates"
-      - "gnome-shell"
-      - "gnome-shell-extensions"
       - "unzip"
       - "wget"
     gnome_user: "instance"

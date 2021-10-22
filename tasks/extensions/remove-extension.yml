@@ -1,5 +1,5 @@
 ---
-# Tasks file for ansible-role-gnome-config: Remove Extensions
+# Tasks file for ansible-role-gnome-extensions: Remove Extensions
 
 - name: Remove extension from file system.
   ansible.builtin.file:

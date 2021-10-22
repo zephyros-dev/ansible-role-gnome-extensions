@@ -1,5 +1,5 @@
 ---
-# tasks file for ansible-role-gnome-config
+# tasks file for ansible-role-gnome-extensions
 
 - name: Install required packages.
   ansible.builtin.package: "{{ gnome_extensions }}"

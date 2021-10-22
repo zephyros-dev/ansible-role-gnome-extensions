@@ -1,8 +1,8 @@
-# Ansible Role Gnome Config
+# Ansible Role Gnome Extensions
 
-[![Molecule Test](https://github.com/ctorgalson/ansible-role-gnome-config/actions/workflows/molecule.yml/badge.svg)](https://github.com/ctorgalson/ansible-role-gnome-config/actions/workflows/molecule.yml)
+[![Molecule Test](https://github.com/ctorgalson/ansible-role-gnome-extensions/actions/workflows/molecule.yml/badge.svg)](https://github.com/ctorgalson/ansible-role-gnome-extensions/actions/workflows/molecule.yml)
 
-An Ansible role for idempotently managing Gnome desktop configuration.
+An Ansible role for idempotently managing Gnome extensions.
 
 For the moment, only supports downloading, enabling, disabling, and removing
 Gnome extensions that are available from https://extensions.gnome.org, as well
@@ -26,15 +26,16 @@ In addition, the role currently uses Debian/Ubuntu-specific tools.
 | `gnome_extensions_url` | yes | `https://extensions.gnome.org` | The base of the url used to download Gnome extensions. |
 | `gnome_packages` | yes | `[{name: 'gnome-shell', state: 'present'}, {'gnome-shell-extensions', 'present'}]` | The packages required on the target host for the role to function in the first place. |
 
-### Defaults: extension-related
+### Defaults
 
 | Variable name | Required | Default value | Description |
 |---------------|----------|---------------|-------------|
-| `gnome_extensions` | yes | `[]` | Describes the url and desired existence/enabled state for each Gnome extension (see note below for details). |
+| `gnome_user`       | yes | `n/a` | The user account to use to install extensions and to install extensions for. |
+| `gnome_extensions` | yes | `[]` | A list of items including the url and desired existence/enabled state for each Gnome extension (see below for details). |
 
 #### `gnome_extensions` variable
 
-This variable has three required properties:
+Each item his variable has three required properties:
 
 | Property name | Required | Type | Accepted values |
 |---------------|----------|------|-----------------|
@@ -72,9 +73,9 @@ The following playbook:
         state: "absent"
         installed: false
   tasks:
-    - name: "Include ansible-role-gnome-config"
+    - name: "Include ansible-role-gnome-extensions"
       include_role:
-        name: "ansible-role-gnome-config"
+        name: "ansible-role-gnome-extensions"
 ```
 
 ## Testing

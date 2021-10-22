@@ -1,5 +1,5 @@
 ---
-# defaults file for ansible-role-gnome-config
+# defaults file for ansible-role-gnome-extensions
 
 # gnome_user: "example"
 

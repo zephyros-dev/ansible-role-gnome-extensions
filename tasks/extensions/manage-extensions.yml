@@ -1,5 +1,5 @@
 ---
-# Tasks file for ansible-role-gnome-config: Manage Extensions
+# Tasks file for ansible-role-gnome-extensions: Manage Extensions
 
 # We need to find all downloaded and installed extensions on every iteration
 # since a previous iteration could have changed what's present and what's

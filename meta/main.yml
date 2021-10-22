@@ -1,9 +1,9 @@
 galaxy_info:
   author: Christopher Torgalson
-  description: An Ansible role for customizing Gnome desktops.
+  description: An Ansible role for managing Gnome extensions.
 
   namespace: ctorgalson
-  role_name: gnome_config
+  role_name: gnome_extensions
 
   license: GPL-3.0-only
 
@@ -19,6 +19,7 @@ galaxy_info:
 
   galaxy_tags:
     - gnome
+    - extensions
     - desktop
 
 dependencies: []

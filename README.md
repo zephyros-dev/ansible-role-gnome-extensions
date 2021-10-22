@@ -40,10 +40,6 @@ This variable has three required properties:
 | `state`       | yes      | string  | `present` or `absent` |
 | `enabled`     | yes      | boolean | `True`, `False`, or [anything ansible regards as 'truthy'](https://docs.ansible.com/ansible/latest/user_guide/playbooks_conditionals.html#conditionals-based-on-variables) |
 
-- url: the url of the extension on extensions.gnome.org, e.g. `https://extensions.gnome.org/extension/750/openweather`,
-- state: whether or not the extension should be present in the file system, e.g. `present` or `absent`,
-- enabled: whether or not to enable the extension, e.g. `true` or `false`
-
 ## Dependencies
 
 The role has no special dependencies. 

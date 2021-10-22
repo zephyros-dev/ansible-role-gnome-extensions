@@ -1,5 +1,7 @@
 # Ansible Role Gnome Config
 
+[![Molecule Test](https://github.com/ctorgalson/ansible-role-gnome-config/actions/workflows/molecule.yml/badge.svg)](https://github.com/ctorgalson/ansible-role-gnome-config/actions/workflows/molecule.yml)
+
 An Ansible role for idempotently managing Gnome desktop configuration.
 
 For the moment, only supports downloading, enabling, disabling, and removing

@@ -15,6 +15,6 @@
         state: "absent"
         installed: false
   tasks:
-    - name: "Include ansible-role-gnome-config"
+    - name: "Include ansible-role-gnome-extensions"
       include_role:
-        name: "ansible-role-gnome-config"
+        name: "ansible-role-gnome-extensions"

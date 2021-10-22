@@ -1,5 +1,5 @@
 ---
-# Tasks file for ansible-role-gnome-config: Download Extension
+# Tasks file for ansible-role-gnome-extensions: Download Extension
 
 - name: Download zipped extension.
   ansible.builtin.get_url:

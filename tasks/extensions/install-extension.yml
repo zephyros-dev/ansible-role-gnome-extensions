@@ -1,5 +1,5 @@
 ---
-# Tasks file for ansible-role-gnome-config: Install Extension
+# Tasks file for ansible-role-gnome-extensions: Install Extension
 
 # @todo Find out where exactly gnome-extensions is available and use it here if
 #   possible (i.e. gnome-extensions enable ...).

@@ -10,7 +10,7 @@
     extension_openweather_dir: "{{ extension_directory }}/openweather-extension@jenslody.de"
     extension_gnome_screenshot_dir: "{{ extension_directory }}/gnome-shell-screenshot@ttll.de"
   roles:
-    - ansible-role-gnome-config
+    - ansible-role-gnome-extensions
   tasks:
     - name: Test extension downloads.
       block:

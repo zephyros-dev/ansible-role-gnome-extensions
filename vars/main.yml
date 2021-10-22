@@ -1,5 +1,5 @@
 ---
-# vars file for ansible-role-gnome-config
+# vars file for ansible-role-gnome-extensions
 
 gnome_extensions_url: "https://extensions.gnome.org"
 

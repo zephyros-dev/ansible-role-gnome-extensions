@@ -91,4 +91,4 @@ GPL-3.0-only
 
 ## Acknowledgments
 
-Big thanks to @PeterMosmans et al whose handy [Ansible Role: customize-gnome](https://github.com/PeterMosmans/ansible-role-customize-gnome) inspired this one.
+Big thanks to [@PeterMosmans](https://github.com/PeterMosmans) et al whose handy [Ansible Role: customize-gnome](https://github.com/PeterMosmans/ansible-role-customize-gnome) inspired this one.

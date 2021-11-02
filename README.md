@@ -65,7 +65,7 @@ The following playbook:
       - url: "https://extensions.gnome.org/extension/750/openweather/"
         state: "present"
         installed: true
-      - url: "https://extensions.gnyi"ome.org/extension/39/put-windows/"
+      - url: "https://extensions.gnome.org/extension/39/put-windows/"
         state: "present"
         installed: true
       - url: "https://extensions.gnome.org/extension/1112/screenshot-tool/"

@@ -8,8 +8,7 @@ For the moment, only supports downloading, enabling, disabling, and removing
 Gnome extensions that are available from https://extensions.gnome.org, as well
 as enabling and disabling Gnome extensions that have been installed via Apt.
 
-Future plans include adding support for downloading via git and the management
-of other Gnome settings and configuration.
+Future plans include adding support for downloading via git.
 
 ## Requirements
 

@@ -1,4 +1,5 @@
-name: GitHub Action
+---
+name: Release to galaxy
 
 on:
   push:

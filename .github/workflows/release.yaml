@@ -1,8 +1,9 @@
 name: GitHub Action
 
 on:
-  tags:
-    - '*'
+  push:
+    tags:
+      - '*'
 
 jobs:
   test:
